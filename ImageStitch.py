@@ -3,46 +3,38 @@ import urllib.request
 from os import path
 from PIL import Image
 
-g=1
-x=1
-y=1
-while g <11:
-    x = 1
-    while x < 54:
-        y=1
-        while y <73:
+# scrape images from the website
+# file names are formatted "Zoom-Xcoord-Ycoord"
+# images are stored in seemingly random folders, can't figure it out, just check them all for every file
+for g in range(1,11):
+    for x in range(1,54):
+        for y in range(1,73):
             filestring = "https://s3.eu-west-2.amazonaws.com/mapshow/Boston1/TileGroup" + str(g) + "/7-" + str(x) + "-" + str(y) + ".jpg"
-            #filestring = "https://s3.eu-west-2.amazonaws.com/mapshow/Boston1/TileGroup20/7-0-71.jpg"
             try:
                 result = urllib.request.urlretrieve(filestring, "images/7-"+ str(x) + "-" + str(y) + ".jpg")
             except IOError as e:
                 print('??????', e)
-            except Exception as e:
-                print('?? ?', e)
-            y=y+1
-        x = x + 1
-    g = g + 1
 
 
+# set the size of the stitched together image
 for x in range(100,1,-1):
-    if (path.exists("images/7-" + str(x) + "-1.jpg")):
+    if path.exists("images/7-" + str(x) + "-1.jpg"):
         maxX = x - 1
         break
-
+        
 for y in range(100,1,-1):
-    if (path.exists("images/7-1-" + str(y) + ".jpg")):
+    if path.exists("images/7-1-" + str(y) + ".jpg"):
         maxY = y - 1
         break
-
-
+        
 im = Image.open("images/7-2-2.jpg")
 (width, height) = im.size
-
 result_width = width * maxX
 result_height = height * maxY
 
 result = Image.new('RGB', (result_width, result_height))
 
+# open each image and paste it into the final image in the correct position
 for y in range(1,maxY):
     for x in range(1,maxX):
         try:
