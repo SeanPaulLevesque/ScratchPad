@@ -6,6 +6,19 @@ from os import path
 from PIL import Image
 
 
+
+im1 = Image.open("images/7-1-2.jpg")
+(width1, height1) = im1.size
+
+# quadrilateral defined as 
+# UpperLeft(x,y)
+# LowerLeft(x,y)
+# BottomRight(x,y)
+# UpperRight(x,y)
+# takes this quad and transforms it rectangular
+im1 = im1.transform(im1.size, Image.QUAD, (0,0,20,height1,width1,height1,width1,0))
+
+
 Image.MAX_IMAGE_PIXELS = None
 
 im1 = Image.open("stitched/all.jpg")
@@ -28,13 +41,6 @@ result.paste(im=im2, box=(width1-400, 178))
 result.save("stitched/all_new.jpg", "JPEG")
 
 program = "done"
-
-
-
-
-
-
-
 
 
 
